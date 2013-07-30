@@ -255,6 +255,7 @@ my $opt_format = {
 	notag => [ 1, "notag|no-tag!", 'Tagging', '--no-tag', "Do not tag downloaded programmes"],
 	tag_cnid => [ 1, "tagcnid|tag-cnid!", 'Tagging', '--tag-cnid', "Use AtomicParsley --cnID argument (if supported) to add catalog ID used for combining HD and SD versions in iTunes"],
 	tag_fulltitle => [ 1, "tagfulltitle|tag-fulltitle!", 'Tagging', '--tag-fulltitle', "Use complete title (including series) instead of shorter episode title"],
+	tag_shorttitle => [ 1, "tagshorttitle|tag-shorttitle!", 'Tagging', '--tag-shorttitle', "Use short series name (without number) and short show name."],
 	tag_hdvideo => [ 1, "taghdvideo|tag-hdvideo!", 'Tagging', '--tag-hdvideo', "AtomicParsley supports --hdvideo argument for HD video flag"],
 	tag_longdesc => [ 1, "taglongdesc|tag-longdesc!", 'Tagging', '--tag-longdesc', "AtomicParsley supports --longdesc argument for long description text"],
 	tag_longdescription => [ 1, "taglongdescription|tag-longdescription!", 'Tagging', '--tag-longdescription', "AtomicParsley supports --longDescription argument for long description text"],
@@ -9583,23 +9584,13 @@ sub tags_from_metadata {
 	# select version of of episode title to use
 	if ( $opt->{tag_fulltitle} ) {
 		$tags->{title} = $meta->{title};
-	} else {
-		print "\n";
-		print "\n";
-		print "meta->episode";
-		print $meta->{episode};
-		print "\n";
-		# fix up episode if necessary
+	} elsif ($opt->{tag_shorttitle}) {
 		(my $title = $meta->{episodeshort}) =~ s/[\s\-]+$//;
 		$tags->{title} = $title ? $title : $meta->{name};
-		print "tags->title";
-		print $tags->{title};
-		print "\n";
-		print "meta->name";
-		print $meta->{name};
-		print "\n";
-		print "\n";
-		print "\n";
+	} else {
+		# fix up episode if necessary
+		(my $title = $meta->{episode}) =~ s/[\s\-]+$//;
+		$tags->{title} = $title ? $title : $meta->{name};
 	}
 	$tags->{artist} = $meta->{channel};
 	# album artist from programme type
@@ -9633,7 +9624,11 @@ sub tags_from_metadata {
 	$tags->{description} = $meta->{descshort};
 	$tags->{longDescription} = $meta->{desc};
 	$tags->{hdvideo} = $meta->{mode} =~ /hd/i ? 'true' : 'false';
-	$tags->{TVShowName} = $meta->{nameshort};
+	if ($opt->{tag_shorttitle}) {
+		$tags->{TVShowName} = $meta->{nameshort};
+	} else {
+		$tags->{TVShowName} = $meta->{name};
+	}
 	$tags->{TVEpisode} = $meta->{senum} ? $meta->{senum} : $meta->{pid};
 	$tags->{TVSeasonNum} = $tags->{disk};
 	$tags->{TVEpisodeNum} = $tags->{tracknum};
