@@ -9584,9 +9584,22 @@ sub tags_from_metadata {
 	if ( $opt->{tag_fulltitle} ) {
 		$tags->{title} = $meta->{title};
 	} else {
+		print "\n";
+		print "\n";
+		print "meta->episode";
+		print $meta->{episode};
+		print "\n";
 		# fix up episode if necessary
-		(my $title = $meta->{episode}) =~ s/[\s\-]+$//;
+		(my $title = $meta->{episodeshort}) =~ s/[\s\-]+$//;
 		$tags->{title} = $title ? $title : $meta->{name};
+		print "tags->title";
+		print $tags->{title};
+		print "\n";
+		print "meta->name";
+		print $meta->{name};
+		print "\n";
+		print "\n";
+		print "\n";
 	}
 	$tags->{artist} = $meta->{channel};
 	# album artist from programme type
@@ -9620,7 +9633,7 @@ sub tags_from_metadata {
 	$tags->{description} = $meta->{descshort};
 	$tags->{longDescription} = $meta->{desc};
 	$tags->{hdvideo} = $meta->{mode} =~ /hd/i ? 'true' : 'false';
-	$tags->{TVShowName} = $meta->{name};
+	$tags->{TVShowName} = $meta->{nameshort};
 	$tags->{TVEpisode} = $meta->{senum} ? $meta->{senum} : $meta->{pid};
 	$tags->{TVSeasonNum} = $tags->{disk};
 	$tags->{TVEpisodeNum} = $tags->{tracknum};
