@@ -255,7 +255,8 @@ my $opt_format = {
 	notag => [ 1, "notag|no-tag!", 'Tagging', '--no-tag', "Do not tag downloaded programmes"],
 	tag_cnid => [ 1, "tagcnid|tag-cnid!", 'Tagging', '--tag-cnid', "Use AtomicParsley --cnID argument (if supported) to add catalog ID used for combining HD and SD versions in iTunes"],
 	tag_fulltitle => [ 1, "tagfulltitle|tag-fulltitle!", 'Tagging', '--tag-fulltitle', "Use complete title (including series) instead of shorter episode title"],
-	tag_shorttitle => [ 1, "tagshorttitle|tag-shorttitle!", 'Tagging', '--tag-shorttitle', "Use short series name (without number) and short show name."],
+	tag_shorttitle => [ 1, "tagshorttitle|tag-shorttitle!", 'Tagging', '--tag-shorttitle', "Use short series name (without number)."],
+	tag_shortname => [ 1, "tagshortname|tag-shortname!", 'Tagging', '--tag-shortname', "Use short episode name (without number)."],
 	tag_hdvideo => [ 1, "taghdvideo|tag-hdvideo!", 'Tagging', '--tag-hdvideo', "AtomicParsley supports --hdvideo argument for HD video flag"],
 	tag_longdesc => [ 1, "taglongdesc|tag-longdesc!", 'Tagging', '--tag-longdesc', "AtomicParsley supports --longdesc argument for long description text"],
 	tag_longdescription => [ 1, "taglongdescription|tag-longdescription!", 'Tagging', '--tag-longdescription', "AtomicParsley supports --longDescription argument for long description text"],
@@ -9624,7 +9625,7 @@ sub tags_from_metadata {
 	$tags->{description} = $meta->{descshort};
 	$tags->{longDescription} = $meta->{desc};
 	$tags->{hdvideo} = $meta->{mode} =~ /hd/i ? 'true' : 'false';
-	if ($opt->{tag_shorttitle}) {
+	if ($opt->{tag_shortname}) {
 		$tags->{TVShowName} = $meta->{nameshort};
 	} else {
 		$tags->{TVShowName} = $meta->{name};
